@@ -32,3 +32,5 @@
 *.app
 # Mac
 *.DS_store
+#Windows
+.exe 
