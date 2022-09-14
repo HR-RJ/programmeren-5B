@@ -33,9 +33,10 @@
 
 # Mac
 *.DS_store
+*.out
 
 #Windows
-.exe 
+*.exe 
 
 #vscode
 .vscode
