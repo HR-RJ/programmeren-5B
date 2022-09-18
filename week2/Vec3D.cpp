@@ -63,7 +63,7 @@ Create a struct as shown in requirements.
 #include <cmath>
 #include <iostream>
 
-
+// make 3D vector
 struct Vec3D {
     float x , y, z;
     };
