@@ -55,7 +55,8 @@ this can be tested by calculating the vectors yourself.
 
 Design:
 
-Create a struct as shown in requirements.
+Create a struct as defined in requirements.
+And create functions for that struct
 */
 
 #include <stdio.h>
@@ -68,21 +69,37 @@ struct Vec3D {
     float x , y, z;
     };
 
+Vec3D vec3D(float x, float y, float z){
+    return Vec3D{x,y,z};
+}
 
-void printvector(){
-    std::cout << "test";
+Vec3D test = vec3D(1,2,3);
+
+
+void show (std::string label, Vec3D const &self){
+    std::cout << "(" << self.x << ", " << self.y << ", " << self.z << ")" << std::endl;
+}
+
+void show (std::string label, float scalar){
+    std::cout << scalar << std::endl;
+}
+
+void show (){
+    std::cout << std::endl;
+}
+
+Vec3D minus(Vec3D const &self){
+    float x = 0 - self.x;
+    float y = 0 - self.y;
+    float z = 0 - self.z;
+}
+
+Vec3D add(Vec3D const &self, Vec3D const &other){
+    float x = self.x + other.x;
 }
 
 int main(){
 
-Vec3D Vec3D (float x, float y, float z);
-// {
-//     struct Vec3D test = {x, y, z};
-//     return test;
-// }
-
-Vec3D test() {
-    return make_Vec3D(1,2,3);
-}
+show("test",test);
 
 }
