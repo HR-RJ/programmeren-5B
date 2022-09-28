@@ -171,9 +171,9 @@ show("test sub: ",sub(test, test1));
 show("test mul: ",mul(test, 5.5));
 show("test div: ",div(test, 6.7));
 show("test norm: ",norm(test1));
-show("test unit: ", unit(test));
+show("test unit: ",unit(test));
 show("test dot: ",dot(test,test2));
-show("test cross: ", cross(test,test2));
+show("test cross: ",cross(test,test2));
 
 
 }
