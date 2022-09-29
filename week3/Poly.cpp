@@ -124,14 +124,13 @@ Vec3D div (float const scalar){
 }
 
 //returns the length of self
-float norm (){
-    Vec3D temp;
+float norm (Vec3D const &temp){
     return sqrt(pow(this->x,2)+ pow(this->y,2) + pow(this->z,2));
 }
 //returns the unit vector with the same direction but length 1
 Vec3D unit (){
     Vec3D temp;
-    return (temp.div(temp.norm));
+    return (temp.div(norm(temp)));
 }
 //returns the dot product of the 2 vectors
 float dot (Vec3D const &other){
