@@ -57,19 +57,19 @@ and fill the classes and functions with the required code.
 
 */
 
-#include <stdio.h>
 #include <vector>
 #include <string>
-// #include <cmath>
-#include <math.h>
+#include <cmath>
 #include <iostream>
 
 class Vec3D
 {
-    float x, y, z;
+
+private:
+    double x, y, z;
 
 public:
-    Vec3D(float x, float y, float z)
+    Vec3D(double x, double y, double z)
     {
         this->x = x;
         this->y = y;
@@ -80,104 +80,71 @@ public:
     // creates a vector pointing in the opposite direction
     Vec3D minus() const
     {
-        Vec3D temp;
-        temp.x = 0 - this->x;
-        temp.y = 0 - this->y;
-        temp.z = 0 - this->z;
-        return temp;
+        return {-this->x, -this->y, -this->z};
     }
 
     // adds 2 vectors to each other
-    Vec3D add(Vec3D const &other) 
+    Vec3D add(Vec3D const &other) const
     {
-        Vec3D temp;
-        x = this->x + other.x;
-        y = this->y + other.y;
-        z = this->z + other.z;
-        return temp;
+        return {this->x + other.x, this->y + other.y, this->z + other.z};
     }
     // calculates the differences between rwo vectors
-    Vec3D sub(Vec3D const &other) const{
-        Vec3D temp;
-        float x = this->x - other.x;
-        x >= 0 ? x = x : x *= -1; // statement that checks if the number is greater than 0 if it isnt it multiplies the number with -1 to return a positive number that shows the difference
-        float y = this->y - other.y;
-        y >= 0 ? y = y : y *= -1;
-        float z = this->z - other.z;
-        z >= 0 ? z = z : z *= -1;
-        return temp;
+    Vec3D sub(Vec3D const &other) const {
+        return {this->x - other.x, this->y - other.y, this->z - other.z};
     }
 
     // multiplies a vector and a scalar
     Vec3D mul(float const &scalar) const
     {
-        Vec3D temp;
-        float x = this->x * scalar;
-        float y = this->y * scalar;
-        float z = this->z * scalar;
-        return temp;
+        return {this->x * scalar, this->y * scalar, this->z * scalar};
     }
 
     // divides a vector by a scalar
-    Vec3D div(float const scalar)
+    Vec3D div(double const scalar) const
     {
-        Vec3D temp;
-        float x = this->x / scalar;
-        float y = this->y / scalar;
-        float z = this->z / scalar;
-        return temp;
+        return {this->x / scalar, this->y / scalar, this->z / scalar};
     }
 
     // returns the length of self
-    float norm() const
+    double norm() const
     {
-        Vec3D temp;
         return sqrt(pow(this->x, 2) + pow(this->y, 2) + pow(this->z, 2));
     }
     // returns the unit vector with the same direction but length 1
     Vec3D unit() const
     {
-        Vec3D temp;
-        return (temp.div(norm()));
+        return this->div(this->norm());
     }
     // returns the dot product of the 2 vectors
-    float dot(Vec3D const &other) const
+    double dot(Vec3D const &other) const
     {
-        float x = this->x * other.x;
-        float y = this->y * other.y;
-        float z = this->z * other.z;
-        float result = x + y + z;
-        return result;
+        return (this->x * other.x) + (this->y * other.y) + (this->z * other.z);
     }
     // returns the cross product of the 2 vectors
     Vec3D cross(Vec3D const &other) const
     {
-        Vec3D cross = Vec3D(this->x, this->y, this->z);
-        cross.x = this->y * other.z - this->z * other.y;
-        cross.y = this->z * other.x - this->x * other.z;
-        cross.z = this->x * other.y - this->y * other.x;
-        return cross;
+        return {this->y * other.z - this->z * other.y, this->z * other.x - this->x * other.z, this->x * other.y - this->y * other.x};
     }
 
-    void show(std::string label) const;
-    void show(std::string label, float scalar);
-    void show();
+    void show(std::string &&label) const;
+    void show(std::string &&label, float &&scalar) const;
+    void show() const;
 };
 
 // print a vector
-void Vec3D::show(std::string label) const
+void Vec3D::show(std::string &&label) const
 {
     std::cout << label;
     std::cout << "(" << this->x << ", " << this->y << ", " << this->z << ")" << std::endl;
 }
 // prints a scalar
-void Vec3D::show(std::string label, float scalar)
+void Vec3D::show(std::string &&label, float &&scalar) const
 {
     std::cout << label;
     std::cout << scalar << std::endl;
 }
 // prints an empty line
-void Vec3D::show()
+void Vec3D::show() const
 {
     std::cout << std::endl;
 }
@@ -188,44 +155,27 @@ class Ray
 public:
     Vec3D support;
     Vec3D direction;
-    float xSup, ySup, zSup, xDir, yDir, zDir;
-    Ray(float xSup, float ySup, float zSup, float xDir, float yDir, float zDir) : support(xSup, ySup, zSup), direction(xDir, yDir, zDir)
-    {
-        this->xSup = xSup;
-        this->ySup = ySup;
-        this->zSup = zSup;
-        this->xDir = xDir;
-        this->yDir = yDir;
-        this->zDir = zDir;
-        this->support = Vec3D(xSup,ySup,zSup);
-        this->direction = Vec3D(xDir,yDir,zDir);
-    }
+    Ray(float xSup, float ySup, float zSup, float xDir, float yDir, float zDir) : support(xSup, ySup, zSup), direction(xDir, yDir, zDir) {}
     Ray() = default;
 };
 
 class Sphere
 {
     Vec3D center;
-    float x;
-    float y;
-    float z;
     float radius;
 public:
     Sphere(float x, float y, float z, float radius){
-    this->x = x;
-    this->y = y;
-    this->z = z;
     this->center = Vec3D(x,y,z);
     this->radius = radius;
     }
     Sphere() = default;
 
-    float distFromRay(Ray const &ray) {
+    float distFromRay(Ray &ray) const {
         return ray.support.sub(center).cross(ray.direction).norm();
     }
 
-    bool hit(Ray &ray)  {
-        if(distFromRay (ray) < radius){
+    bool hit(Ray &ray) const  {
+        if(distFromRay (ray) <= radius){
             ray.support = hitPoint(ray);
             auto normal = ray.support.sub(center).unit();
             auto radial = normal.mul(ray.direction.dot(normal));
@@ -236,7 +186,7 @@ public:
         return false;
     }
 
-    Vec3D hitPoint(Ray &ray){
+    Vec3D hitPoint(Ray &ray) const{
         auto blabla = ray.support.sub(center);
         auto nable = pow(ray.direction.dot(blabla), 2) - pow(blabla.norm(), 2) + pow(radius, 2);
         auto distFromSupport = -ray.direction.dot(blabla) - sqrt(nable);
@@ -247,51 +197,46 @@ float far = 1000.0;
 int main()
 {
 
-    // std::vector<float> Sphere0{-0.4, 0.23, -1., 0.4};
-    // std::vector<float> Sphere1{0.4, 0.4, -1.2, 0.3};
-    // std::vector<float> Sphere2{0.7, -0.15, -1.5, 0.2};
-    Sphere Sphere0 = Sphere(-0.4, 0.23, -1., 0.4);
-    Sphere Sphere1 = Sphere(0.4, 0.4, -1.2, 0.3);
-    Sphere Sphere2 = Sphere(0.7, -0.15, -1.5, 0.2);
-    // stl::vector
-    // std::vector<float> Ray0{-far, 0.23, -1, far, 0, 0};
-    // std::vector<float> Ray1{0.4, -far, -1.2, 0, far, 0};
-    // std::vector<float> Ray2{0.7, -0.15, -far, 0, 0, far};
-    Ray Ray0 = Ray(-far, 0.23, -1, far, 0, 0);
-    Ray Ray1 = Ray(0.4, -far, -1.2, 0, far, 0);
-    Ray Ray2 = Ray(0.7, -0.15, -far, 0, 0, far);
-    if(Sphere0.hit(Ray0)){
-        Sphere0.hitPoint(Ray0).show("hit Ray0 Sphere0: ");
+    Sphere sphere_0 = Sphere(-0.4, 0.23, -1., 0.4);
+    Sphere sphere_1 = Sphere(0.4, 0.4, -1.2, 0.3);
+    Sphere sphere_3 = Sphere(0.7, -0.15, -1.5, 0.2);
+
+    Ray ray_0 = Ray(-far, 0.23, -1, far, 0, 0);
+    Ray ray_1 = Ray(0.4, -far, -1.2, 0, far, 0);
+    Ray ray_2 = Ray(0.7, -0.15, -far, 0, 0, far);
+
+    if(sphere_0.hit(ray_0)){
+        sphere_0.hitPoint(ray_0).show("hit ray_0 sphere_0: ");
     }
-        if(Sphere0.hit(Ray1)){
-        Sphere0.hitPoint(Ray1).show("hit Ray1 Sphere0: ");
+        if(sphere_0.hit(ray_1)){
+        sphere_0.hitPoint(ray_1).show("hit ray_1 sphere_0: ");
     }
-        if(Sphere0.hit(Ray2)){
-        Sphere0.hitPoint(Ray2).show("hit Ray2 Sphere0: ");
+        if(sphere_0.hit(ray_2)){
+        sphere_0.hitPoint(ray_2).show("hit ray_2 sphere_0: ");
     }
     
-        Ray0.support.show();
+        ray_0.support.show();
 
-        if(Sphere1.hit(Ray0)){
-        Sphere1.hitPoint(Ray0).show("hit Ray0 Sphere1: ");
+        if(sphere_1.hit(ray_0)){
+        sphere_1.hitPoint(ray_0).show("hit ray_0 sphere_1: ");
     }
-        if(Sphere1.hit(Ray1)){
-        Sphere1.hitPoint(Ray1).show("hit Ray1 Sphere1: ");
+        if(sphere_1.hit(ray_1)){
+        sphere_1.hitPoint(ray_1).show("hit ray_1 sphere_1: ");
     }
-        if(Sphere1.hit(Ray2)){
-        Sphere1.hitPoint(Ray2).show("hit Ray2 Sphere1: ");
+        if(sphere_1.hit(ray_2)){
+        sphere_1.hitPoint(ray_2).show("hit ray_2 sphere_1: ");
     }
 
-    Ray0.support.show();
+    ray_0.support.show();
 
-            if(Sphere2.hit(Ray0)){
-        Sphere2.hitPoint(Ray0).show("hit Ray0 Sphere2: ");
+            if(sphere_3.hit(ray_0)){
+        sphere_3.hitPoint(ray_0).show("hit ray_0 sphere_3: ");
     }
-        if(Sphere2.hit(Ray1)){
-        Sphere2.hitPoint(Ray1).show("hit Ray1 Sphere2: ");
+        if(sphere_3.hit(ray_1)){
+        sphere_3.hitPoint(ray_1).show("hit ray_1 sphere_3: ");
     }
-        if(Sphere2.hit(Ray2)){
-        Sphere2.hitPoint(Ray2).show("hit Ray2 Sphere2: ");
+        if(sphere_3.hit(ray_2)){
+        sphere_3.hitPoint(ray_2).show("hit ray_2 sphere_3: ");
     }
     return 0;
 }

@@ -170,11 +170,11 @@ public:
     }
     Sphere() = default;
 
-    float distFromRay(Ray &ray) {
+    float distFromRay(Ray &ray) const {
         return ray.support.sub(center).cross(ray.direction).norm();
     }
 
-    bool hit(Ray &ray)  {
+    bool hit(Ray &ray) const  {
         if(distFromRay (ray) <= radius){
             ray.support = hitPoint(ray);
             auto normal = ray.support.sub(center).unit();
@@ -186,7 +186,7 @@ public:
         return false;
     }
 
-    Vec3D hitPoint(Ray &ray){
+    Vec3D hitPoint(Ray &ray) const{
         auto blabla = ray.support.sub(center);
         auto nable = pow(ray.direction.dot(blabla), 2) - pow(blabla.norm(), 2) + pow(radius, 2);
         auto distFromSupport = -ray.direction.dot(blabla) - sqrt(nable);
