@@ -3,6 +3,8 @@
 #include <cmath>
 #include <iostream>
 
+
+
 class Vec3D
 {
 
@@ -44,27 +46,39 @@ public:
     Vec3D cross(Vec3D const &other) const;
 };
 
+class Ray;
+class Object
+{
+public:
+Vec3D center;
+Object(float x, float y, float z): center (x,y,z){}
+virtual bool hit(Ray &ray) const = 0;
+// virtual float distFromRay(Ray &ray) const;
+// virtual Vec3D hitPoint(Ray &ray) const;
+Object() = default;
+};
+
 class Ray
 {
 
 public:
     Vec3D support;
     Vec3D direction;
+    using VPO = std::vector<Object*>;
     Ray(float xSup, float ySup, float zSup, float xDir, float yDir, float zDir) : support(xSup, ySup, zSup), direction(xDir, yDir, zDir) {}
+    Ray(float xStart, float yStart, VPO &Objects);
+    bool scan();
     Ray() = default;
 };
 
-class Sphere
+
+class Sphere: public Object
 {
-    Vec3D center;
     float radius;
+    // Vec3D center;
 
 public:
-    Sphere(float x, float y, float z, float radius)
-    {
-        this->center = Vec3D(x, y, z);
-        this->radius = radius;
-    }
+    Sphere(float x, float y, float z, float radius) : Object(x,y,z), radius(radius){}
     Sphere() = default;
 
     float distFromRay(Ray &ray) const;
@@ -72,4 +86,18 @@ public:
     bool hit(Ray &ray) const;
     // functions that returns the points where the ray and sphere intersect
     Vec3D hitPoint(Ray &ray) const;
+};
+
+// Black squares on the chessboard pattern act as see through so the rays won't hit them
+// Hit returns false when it hits a black square
+class Floor : public Object
+{
+bool hit(Ray &ray);
+};
+
+// The scan function in RayScanner launces Rays from a point 3 meters behind an imaginary display
+// The display will be ~80 pixels wide and 40 pixels tall
+class RayScanner
+{
+    void scan();
 };
