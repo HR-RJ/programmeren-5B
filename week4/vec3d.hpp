@@ -3,6 +3,16 @@
 #include <cmath>
 #include <iostream>
 
+auto const rows = 80;
+auto const columns = 40;
+auto const charset = "MNIL+-. ";
+auto const black = sizeof (charset) / sizeof (char) - 1;
+auto const stride = 0.105;
+auto const aLot = 1000;
+auto const aspectRatio = 0.65;
+typedef std::vector<float>  VF;
+typedef std::vector<VF>  VVF;
+// auto image = VVF(rows,VF(columns,black));
 
 
 class Vec3D
@@ -53,8 +63,6 @@ public:
 Vec3D center;
 Object(float x, float y, float z): center (x,y,z){}
 virtual bool hit(Ray &ray) const = 0;
-// virtual float distFromRay(Ray &ray) const;
-// virtual Vec3D hitPoint(Ray &ray) const;
 Object() = default;
 };
 
@@ -65,6 +73,7 @@ public:
     Vec3D support;
     Vec3D direction;
     using VPO = std::vector<Object*>;
+    VPO Objects;
     Ray(float xSup, float ySup, float zSup, float xDir, float yDir, float zDir) : support(xSup, ySup, zSup), direction(xDir, yDir, zDir) {}
     Ray(float xStart, float yStart, VPO &Objects);
     bool scan();
@@ -92,12 +101,18 @@ public:
 // Hit returns false when it hits a black square
 class Floor : public Object
 {
-bool hit(Ray &ray);
+    Vec3D center;//center of chess board?
+    public:
+    Floor(int rows, int columns, float x, float y, float z, float stride, int aLot): center(x,y,z){}
+    bool hit(Ray &ray);
 };
 
 // The scan function in RayScanner launces Rays from a point 3 meters behind an imaginary display
 // The display will be ~80 pixels wide and 40 pixels tall
+// float zOffset = 3.0;
 class RayScanner
 {
+    public:
+    RayScanner(Ray::VPO &objects){}
     void scan();
 };

@@ -38,6 +38,11 @@ Design:
 
 Continue using the previous excersize and improve it with the requirements as defined
 
+
+chessboard:
+white = rowIndex%2 == columnindex%2
+            odd             odd
+black is 0 -> "empty"
 */
 
 #include <vector>
@@ -53,6 +58,7 @@ int main()
     Sphere sphere_0 = Sphere(-0.4, 0.23, -1., 0.4);
     Sphere sphere_1 = Sphere(0.4, 0.4, -1.2, 0.3);
     Sphere sphere_3 = Sphere(0.7, -0.15, -1.5, 0.2);
+
 
     Ray ray_0 = Ray(-far, 0.23, -1, far, 0, 0);
     Ray ray_1 = Ray(0.4, -far, -1.2, 0, far, 0);

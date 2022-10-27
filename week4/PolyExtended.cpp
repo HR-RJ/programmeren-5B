@@ -95,21 +95,46 @@ Vec3D Sphere::hitPoint(Ray &ray) const
     auto nable = pow(ray.direction.dot(blabla), 2) - pow(blabla.norm(), 2) + pow(radius, 2);
     auto distFromSupport = -ray.direction.dot(blabla) - sqrt(nable);
     return ray.support.add(ray.direction.mul(distFromSupport));
+    // reflect?
 }
-
-// Object functions
 
 // Ray functions
-bool Ray::scan(){
-    // Sphere::hit(Ray &ray);
+bool Ray::scan()
+{
+    for (auto o : Objects)
+    {
+        if (o->hit(*this))
+        {
+            return 1;
+        }
+        return 0;
+    }
 }
-// Floor functions
-bool Floor::hit(Ray &ray){
 
+// Floor functions
+bool Floor::hit(Ray &ray)
+{
+    // white = rowIndex%2 == columnIndex%2;
+    // if square == white hit = true else hit = false
+    for (auto rowIndex = 0; rowIndex < columns; rowIndex++)
+    {
+        auto y = (rows / 2. - rowIndex) / rows;
+        int yCrude = aLot + y / stride;
+        for (auto columnIndex = 0; columnIndex < rows; columnIndex++)
+        {
+            auto x = (columnIndex - columns / 2) / (aspectRatio * columns);
+            int xCrude = aLot + x / stride;
+            auto color = ((xCrude % 2 && !(yCrude % 2)) || (!(xCrude % 2) && (yCrude % 2))) ? 2 : 1;
+        }
+    }
 }
 
 // RayScanner
 
-void RayScanner::scan(){
-
+void RayScanner::scan()
+{
+    
 }
+
+// render
+// If a ray hits a sphere/a tile of the floor it prints a character from the perspective 3 meters behind the screen
