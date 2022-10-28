@@ -109,30 +109,43 @@ bool Ray::scan()
         }
         return 0;
     }
+    return 0;
 }
 
 // Floor functions
-bool Floor::hit(Ray &ray)
+bool Floor::hit(Ray &ray) const
 {
     // white = rowIndex%2 == columnIndex%2;
     // if square == white hit = true else hit = false
-    for (auto rowIndex = 0; rowIndex < columns; rowIndex++)
+    float z = 0;
+    float t = (z- ray.support.z / ray.direction.z);
+    
+    if (t > 0)
     {
-        auto y = (rows / 2. - rowIndex) / rows;
-        int yCrude = aLot + y / stride;
-        for (auto columnIndex = 0; columnIndex < rows; columnIndex++)
-        {
-            auto x = (columnIndex - columns / 2) / (aspectRatio * columns);
-            int xCrude = aLot + x / stride;
-            auto color = ((xCrude % 2 && !(yCrude % 2)) || (!(xCrude % 2) && (yCrude % 2))) ? 2 : 1;
-        }
+        Vec3D hitPoint = ray.support.add(ray.direction.mul(t));
+        bool passThrough = (int)(floor(hitPoint.x/20)+floor(hitPoint.y / 20)) %2 ? 1 : 0;
+        return passThrough;
     }
+    return 0;
+
 }
 
 // RayScanner
 
 void RayScanner::scan()
 {
+    for (int i = 0; i < columns; i++)
+    {
+        for (int j = 0; i < rows; i++)
+        {
+            Vec3D end = Vec3D(-(columns/2)+ j, (rows/2)-i,0);
+            Vec3D pointOfView = Vec3D(0,0,3);
+            Vec3D direction = end.sub(pointOfView);
+            Ray start = Ray(pointOfView, direction, objects);
+            
+        }
+        
+    }
     
 }
 

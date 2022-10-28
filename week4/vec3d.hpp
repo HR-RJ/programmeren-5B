@@ -12,6 +12,9 @@ auto const aLot = 1000;
 auto const aspectRatio = 0.65;
 typedef std::vector<float>  VF;
 typedef std::vector<VF>  VVF;
+class Object;
+typedef std::vector<Object*> VPO;
+typedef VPO objects;
 // auto image = VVF(rows,VF(columns,black));
 
 
@@ -19,9 +22,10 @@ class Vec3D
 {
 
 private:
-    double x, y, z;
+    
 
 public:
+    double x, y, z;
     Vec3D(double x, double y, double z)
     {
         this->x = x;
@@ -75,7 +79,10 @@ public:
     using VPO = std::vector<Object*>;
     VPO Objects;
     Ray(float xSup, float ySup, float zSup, float xDir, float yDir, float zDir) : support(xSup, ySup, zSup), direction(xDir, yDir, zDir) {}
-    Ray(float xStart, float yStart, VPO &Objects);
+    Ray(float xStart, float yStart, VPO &objects){}
+    Ray(Vec3D const &support, Vec3D &direction, VPO &objects){
+        direction = direction.unit();
+    }
     bool scan();
     Ray() = default;
 };
@@ -103,8 +110,8 @@ class Floor : public Object
 {
     Vec3D center;//center of chess board?
     public:
-    Floor(int rows, int columns, float x, float y, float z, float stride, int aLot): center(x,y,z){}
-    bool hit(Ray &ray);
+    Floor(float x, float y, float z, float stride, int aLot): center(x,y,z){}
+    bool hit(Ray &ray) const;
 };
 
 // The scan function in RayScanner launces Rays from a point 3 meters behind an imaginary display
@@ -113,6 +120,7 @@ class Floor : public Object
 class RayScanner
 {
     public:
+    VPO objects;
     RayScanner(Ray::VPO &objects){}
     void scan();
 };
