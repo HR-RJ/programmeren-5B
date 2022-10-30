@@ -92,9 +92,9 @@ bool Sphere::hit(Ray &ray) const
 // functions that returns the points where the ray and sphere intersect
 Vec3D Sphere::hitPoint(Ray &ray) const
 {
-    auto blabla = ray.support.sub(center);
-    auto nable = pow(ray.direction.dot(blabla), 2) - pow(blabla.norm(), 2) + pow(radius, 2);
-    auto distFromSupport = -ray.direction.dot(blabla) - sqrt(nable);
+    auto subCenter = ray.support.sub(center);
+    auto pythagoras = pow(ray.direction.dot(subCenter), 2) - pow(subCenter.norm(), 2) + pow(radius, 2);
+    auto distFromSupport = -ray.direction.dot(subCenter) - sqrt(pythagoras);
     return ray.support.add(ray.direction.mul(distFromSupport));
     // reflect?
 }
@@ -165,6 +165,6 @@ void RayScanner::render()
             std::cout << charset[int(image[rowIndex][columnIndex])];
             // std::cout << image[rowIndex][columnIndex];
         }
-        std::cout << "+\n";
+        std::cout << "\n";
     }
 }

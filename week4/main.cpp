@@ -63,7 +63,7 @@ int main()
     objects.push_back(sphere_0);
     objects.push_back(sphere_1);
     objects.push_back(sphere_2);
-    objects.push_back(f);
+    // objects.push_back(f);
 
     RayScanner scanner = RayScanner(objects);
 

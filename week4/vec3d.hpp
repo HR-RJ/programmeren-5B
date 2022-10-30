@@ -106,7 +106,7 @@ public:
 class Floor : public Object
 {
     public:
-    Floor(){}
+    Floor(){}//??
     bool hit(Ray &ray) const;
 };
 
