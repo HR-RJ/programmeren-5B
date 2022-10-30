@@ -1,4 +1,5 @@
 #include "vec3d.hpp"
+auto image = VVF(rows, VF(columns, black));
 
 // print a vector
 void Vec3D::show(std::string &&label) const
@@ -65,9 +66,8 @@ double Vec3D::dot(Vec3D const &other) const
 // returns the cross product of the 2 vectors
 Vec3D Vec3D::cross(Vec3D const &other) const
 {
-    return {this->y * other.z - this->z * other.y, this->z * other.x - this->x * other.z, this->x * other.y - this->y * other.x};
+    return {(this->y * other.z) - (this->z * other.y), (this->z * other.x) - (this->x * other.z), (this->x * other.y) - (this->y * other.x)};
 }
-
 // Sphere functions
 
 float Sphere::distFromRay(Ray &ray) const
@@ -77,6 +77,7 @@ float Sphere::distFromRay(Ray &ray) const
 // functions that checks if a ray hits this sphere
 bool Sphere::hit(Ray &ray) const
 {
+    // std::cout << "dist: " << distFromRay(ray);
     if (distFromRay(ray) <= radius)
     {
         ray.support = hitPoint(ray);
@@ -101,13 +102,13 @@ Vec3D Sphere::hitPoint(Ray &ray) const
 // Ray functions
 bool Ray::scan()
 {
-    for (auto o : Objects)
+    for (auto o : objects)
     {
         if (o->hit(*this))
         {
+            // std::cout << "hit" << std::endl;
             return 1;
         }
-        return 0;
     }
     return 0;
 }
@@ -118,36 +119,52 @@ bool Floor::hit(Ray &ray) const
     // white = rowIndex%2 == columnIndex%2;
     // if square == white hit = true else hit = false
     float z = 0;
-    float t = (z- ray.support.z / ray.direction.z);
-    
+    float t = (z - ray.support.z / ray.direction.z);
+
     if (t > 0)
     {
         Vec3D hitPoint = ray.support.add(ray.direction.mul(t));
-        bool passThrough = (int)(floor(hitPoint.x/20)+floor(hitPoint.y / 20)) %2 ? 1 : 0;
+        bool passThrough = (int)(floor(hitPoint.x / 20) + floor(hitPoint.y / 20)) % 2 ? 1 : 0;
         return passThrough;
     }
     return 0;
-
 }
 
 // RayScanner
 
 void RayScanner::scan()
 {
-    for (int i = 0; i < columns; i++)
+    for (int i = 0; i < rows; i++)
     {
-        for (int j = 0; i < rows; i++)
+        for (int j = 0; j < columns; j++)
         {
-            Vec3D end = Vec3D(-(columns/2)+ j, (rows/2)-i,0);
-            Vec3D pointOfView = Vec3D(0,0,3);
-            Vec3D direction = end.sub(pointOfView);
-            Ray start = Ray(pointOfView, direction, objects);
-            
+            // Vec3D end = Vec3D(-(columns / 2) + i, (rows / 2) - j, 0);
+            // Vec3D pointOfView = Vec3D(0, 0, -3);
+            // Vec3D direction = end.sub(pointOfView);
+            Ray start = Ray(-(columns / 2) + i, (rows / 2) - j, objects);
+            // start.support.show("supp: ");
+            // start.direction.show("dir: ");
+            color = start.scan() ? 2 : 1;
+            image[i][j] /= color;
         }
-        
     }
-    
 }
 
 // render
 // If a ray hits a sphere/a tile of the floor it prints a character from the perspective 3 meters behind the screen
+
+void RayScanner::render()
+{
+    std::cout << "\n";
+    for (auto rowIndex = 0; rowIndex < rows; rowIndex++)
+    {
+        std::cout << "                    "; // offset
+        for (auto columnIndex = 0; columnIndex < columns; columnIndex++)
+        {
+            // std::cout << charset[int(image[rowIndex][columnIndex])];
+            std::cout << charset[int(image[rowIndex][columnIndex])];
+            // std::cout << image[rowIndex][columnIndex];
+        }
+        std::cout << "+\n";
+    }
+}

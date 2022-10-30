@@ -81,6 +81,7 @@ int main(){
          std::cout << "                    ";//offset
         for(auto columnIndex = 0; columnIndex < columns; columnIndex++){
             std::cout << charset[int(image[rowIndex][columnIndex])];
+            // std::cout << image[rowIndex][columnIndex];
         }
         std::cout << "\n";
         
