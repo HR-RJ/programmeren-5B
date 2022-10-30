@@ -57,7 +57,7 @@ int main()
     // Floor f = Floor();
     Sphere *sphere_0 = new Sphere(-40, 3, 0, 200);
     Sphere *sphere_1 = new Sphere(-150, 3, 0, 200);
-    Sphere *sphere_2 = new Sphere(-4, 30, 0, 200);
+    Sphere *sphere_2 = new Sphere(-4, 30, 0, 100);
     Floor *f = new Floor;
 
     objects.push_back(sphere_0);

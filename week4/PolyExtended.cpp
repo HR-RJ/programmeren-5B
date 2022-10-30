@@ -141,7 +141,11 @@ void RayScanner::scan()
             // Vec3D end = Vec3D(-(columns / 2) + i, (rows / 2) - j, 0);
             // Vec3D pointOfView = Vec3D(0, 0, -3);
             // Vec3D direction = end.sub(pointOfView);
-            Ray start = Ray(-(columns / 2) + i, (rows / 2) - j, objects);
+            Vec3D end = Vec3D(-(rows / 2) + i, (columns / 2) - j, 0);
+            Vec3D origin = Vec3D(0,40,-3);
+            Vec3D direction = end.sub(origin);
+            // Ray start = Ray(direction.x, direction.y,objects);
+            Ray start = Ray(origin, direction,objects);
             // start.support.show("supp: ");
             // start.direction.show("dir: ");
             color = start.scan() ? 2 : 1;
