@@ -57,6 +57,8 @@ double Vec3D::norm() const
 Vec3D Vec3D::unit() const
 {
     return this->div(this->norm());
+    // float length = norm();
+    // return Vec3D(this->x/length, this->y/length, this->z/length);
 }
 // returns the dot product of the 2 vectors
 double Vec3D::dot(Vec3D const &other) const
@@ -146,6 +148,10 @@ void RayScanner::scan()
             Vec3D direction = end.sub(origin);
             // Ray start = Ray(direction.x, direction.y,objects);
             Ray start = Ray(origin, direction,objects);
+            // std::cout << "ray x: " << start.direction.x << std::endl;
+            // std::cout << "ray y: " << start.direction.y << std::endl;
+            // std::cout << "ray z: " << start.direction.z << std::endl;
+            direction.show("test ");
             // start.support.show("supp: ");
             // start.direction.show("dir: ");
             color = start.scan() ? 2 : 1;
