@@ -64,7 +64,7 @@ class Object
 public:
 Vec3D center;
 Object(float x, float y, float z): center (x,y,z){}
-virtual bool hit(Ray &ray) const = 0;
+virtual bool hit(Ray const &ray) const = 0;
 Object() = default;
 };
 
@@ -72,33 +72,41 @@ class Ray
 {
 
 public:
-    Vec3D support;
-    Vec3D direction;
-    using VPO = std::vector<Object*>;
-    VPO objects;
-    Ray(float xSup, float ySup, float zSup, float xDir, float yDir, float zDir) : support(xSup, ySup, zSup), direction(xDir, yDir, zDir) {}
-    Ray(float xStart, float yStart, VPO &objects) : objects(objects), support(Vec3D(0, 40, -3)), direction(Vec3D(xStart, yStart, -3)){}
-    Ray(Vec3D const &support, Vec3D &direction, VPO &objects){
-        // direction = direction.unit();
+    // Vec3D support;
+    // Vec3D direction;
+    // using VPO = std::vector<Object*>;
+    // VPO objects;
+    // Ray(float xSup, float ySup, float zSup, float xDir, float yDir, float zDir) : support(xSup, ySup, zSup), direction(xDir, yDir, zDir) {}
+    // Ray(float xStart, float yStart, VPO &objects) : objects(objects), support(Vec3D(0, 40, -3)), direction(Vec3D(xStart, yStart, -3)){}
+    // Ray(Vec3D const &support, Vec3D &direction, VPO &objects){
+    //     // direction = direction.unit();
+    // }
+    // bool scan();
+    // // Ray() = default;
+    Vec3D support, direction;
+    // Overloaded Constructor
+    Ray(float xSup, float ySup, float zSup, float xDir, float yDir, float zDir) : support(xSup, ySup, zSup), direction(xDir, yDir, zDir)
+    {
     }
+    // Overloaded Constructor
+    Ray(float xStart, float yStart, VPO &objects);
     bool scan();
-    // Ray() = default;
 };
 
 
 class Sphere: public Object
 {
     float radius;
-
+    Vec3D center;
 public:
-    Sphere(float x, float y, float z, float radius) : Object(x,y,z), radius(radius){}
-    Sphere() = default;
+    Sphere(float x, float y, float z, float radius) : center(x,y,z), radius(radius){}
+    // Sphere() = default;
 
-    float distFromRay(Ray &ray) const;
+    float distFromRay(Ray const &ray) const;
     // functions that checks if a ray hits this sphere
-    bool hit(Ray &ray) const;
+    bool hit(Ray const &ray) const;
     // functions that returns the points where the ray and sphere intersect
-    Vec3D hitPoint(Ray &ray) const;
+    Vec3D hitPoint(Ray const &ray) const;
 };
 
 // Black squares on the chessboard pattern act as see through so the rays won't hit them
@@ -106,8 +114,9 @@ public:
 class Floor : public Object
 {
     public:
-    Floor(){}//??
-    bool hit(Ray &ray) const;
+    Vec3D center;
+    Floor(float x, float y, float z) : center(x,y,z){}
+    bool hit(Ray const &ray) const;
 };
 
 // The scan function in RayScanner launces Rays from a point 3 meters behind an imaginary display
@@ -120,5 +129,4 @@ public:
     VPO objects;
     RayScanner(VPO &objects) : objects(objects){}
     void scan();
-    void render();
 };

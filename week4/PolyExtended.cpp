@@ -72,109 +72,151 @@ Vec3D Vec3D::cross(Vec3D const &other) const
 }
 // Sphere functions
 
-float Sphere::distFromRay(Ray &ray) const
+float Sphere::distFromRay(Ray const &ray) const
 {
     return ray.support.sub(center).cross(ray.direction).norm();
 }
 // functions that checks if a ray hits this sphere
-bool Sphere::hit(Ray &ray) const
+bool Sphere::hit(Ray const &ray) const
 {
-    // std::cout << "dist: " << distFromRay(ray);
-    if (distFromRay(ray) <= radius)
-    {
-        ray.support = hitPoint(ray);
-        auto normal = ray.support.sub(center).unit();
-        auto radial = normal.mul(ray.direction.dot(normal));
-        auto tangential = ray.direction.sub(radial);
-        ray.direction = tangential.sub(radial).unit();
-        return true;
-    }
-    return false;
+    return distFromRay(ray) <= radius;
 }
 // functions that returns the points where the ray and sphere intersect
-Vec3D Sphere::hitPoint(Ray &ray) const
+Vec3D Sphere::hitPoint(Ray const &ray) const
 {
-    auto subCenter = ray.support.sub(center);
-    auto pythagoras = pow(ray.direction.dot(subCenter), 2) - pow(subCenter.norm(), 2) + pow(radius, 2);
-    auto distFromSupport = -ray.direction.dot(subCenter) - sqrt(pythagoras);
-    return ray.support.add(ray.direction.mul(distFromSupport));
-    // reflect?
+
+    if (!hit(ray))
+    {
+        std::cout << "No hit";
+        return Vec3D(0, 0, 0);
+    }
+    else
+    {
+        // Ray hits Sphere
+        return ray.support.sub(center).cross(ray.direction);
+    }
 }
 
 // Ray functions
 bool Ray::scan()
 {
-    for (auto o : objects)
-    {
-        if (o->hit(*this))
-        {
-            // std::cout << "hit" << std::endl;
-            return 1;
-        }
-    }
-    return 0;
+    // for (auto o : objects)
+    // {
+    //     if (o->hit(*this))
+    //     {
+    //         // std::cout << "hit" << std::endl;
+    //         return 1;
+    //     }
+    // }
+    // return 0;
 }
 
 // Floor functions
-bool Floor::hit(Ray &ray) const
+bool Floor::hit(Ray const &ray) const
 {
-    // white = rowIndex%2 == columnIndex%2;
-    // if square == white hit = true else hit = false
-    float z = 0;
-    float t = (z - ray.support.z / ray.direction.z);
+    Ray r = ray;
+    auto widthSquares = 0.15;
+    // normal vector that is perpendicular to the floor
+    auto normalVector = Vec3D(0, 1, 0);
 
-    if (t > 0)
-    {
-        Vec3D hitPoint = ray.support.add(ray.direction.mul(t));
-        bool passThrough = (int)(floor(hitPoint.x / 20) + floor(hitPoint.y / 20)) % 2 ? 1 : 0;
-        return passThrough;
-    }
-    return 0;
+    /* 
+    dotproduct is zero -> the vector and normal vector are perpendicular.
+    dotproduct is zero, floor hit, return true
+    */
+
+    // Distance between hit point and start from Ray.
+    auto d = center.sub(r.support).dot(normalVector) / r.direction.dot(normalVector);
+
+    // x, y, z are : p = l0 + l * d
+
+    auto hitpoint = r.support.add(r.direction.mul(d));
+
+    hitpoint = r.direction.mul(d);
+
+    //  The Floor is hit, hitpoint is behind the screen and white square at hitpoint return true
+    return (hitpoint.z > 0 && ((int)(hitpoint.z / widthSquares) % 2 == 0 ^ (int)(hitpoint.x / widthSquares) % 2 == 0));
 }
 
 // RayScanner
 
 void RayScanner::scan()
 {
-    for (int i = 0; i < rows; i++)
+    // Imaginary Screen
+    auto const nrOfRows = 100;
+    auto const nrOfCols = 3 * nrOfRows;
+    // dimensions 1:4
+    auto const aspectRatio = 0.4;
+
+    // Characters
+    auto const pixelChars = " M";
+    auto const distFromScreen = 3.00;
+    // Screen Size
+    auto const screenWidth = 0.30;
+    auto const screenHeight = 0.20;
+
+    auto far = 10000;
+
+    VVF image;
+    // For loop x
+    for (auto rowIndex = 0; rowIndex < nrOfRows; rowIndex++)
     {
-        for (int j = 0; j < columns; j++)
+        auto y = (nrOfRows / 2. - rowIndex) / nrOfRows;
+        VF row;
+        // For loop y
+        for (auto colIndex = 0; colIndex < nrOfCols; colIndex++)
         {
-            // Vec3D end = Vec3D(-(columns / 2) + i, (rows / 2) - j, 0);
-            // Vec3D pointOfView = Vec3D(0, 0, -3);
-            // Vec3D direction = end.sub(pointOfView);
-            Vec3D end = Vec3D(-(rows / 2) + i, (columns / 2) - j, 0);
-            Vec3D origin = Vec3D(0,40,-3);
-            Vec3D direction = end.sub(origin);
-            // Ray start = Ray(direction.x, direction.y,objects);
-            Ray start = Ray(origin, direction,objects);
-            // std::cout << "ray x: " << start.direction.x << std::endl;
-            // std::cout << "ray y: " << start.direction.y << std::endl;
-            // std::cout << "ray z: " << start.direction.z << std::endl;
-            direction.show("test ");
-            // start.support.show("supp: ");
-            // start.direction.show("dir: ");
-            color = start.scan() ? 2 : 1;
-            image[i][j] /= color;
+            // 2
+            //auto x = (colIndex - nrOfCols / 2) / (aspectRatio * nrOfCols);
+            // 1
+            auto x = (nrOfCols / 2 - colIndex ) / (aspectRatio * nrOfCols);
+            // Create Ray
+            auto direction = Vec3D(x, y, 0).sub(Vec3D(0, 0, -distFromScreen));
+            Ray ray(0, 0, distFromScreen, direction.x, direction.y, direction.z);
+            for (auto object : objects)
+            {
+                // Hit or not
+                if (object->hit(ray))
+                {
+                    // printf("m");
+                    row.push_back(1.0);
+                }
+                else
+                {
+                    // printf("-");
+                    row.push_back(0.0);
+                }
+            }
         }
+        image.push_back(row);
+        // printf("\n");
+    }
+
+    // print VVF on screen
+    for (auto y : image)
+    {
+        for (auto x : y)
+        {
+            std::cout << pixelChars[(int)x];
+        }
+        std::cout << "\n";
     }
 }
 
 // render
 // If a ray hits a sphere/a tile of the floor it prints a character from the perspective 3 meters behind the screen
 
-void RayScanner::render()
-{
-    std::cout << "\n";
-    for (auto rowIndex = 0; rowIndex < rows; rowIndex++)
-    {
-        std::cout << "                    "; // offset
-        for (auto columnIndex = 0; columnIndex < columns; columnIndex++)
-        {
-            // std::cout << charset[int(image[rowIndex][columnIndex])];
-            std::cout << charset[int(image[rowIndex][columnIndex])];
-            // std::cout << image[rowIndex][columnIndex];
-        }
-        std::cout << "\n";
-    }
-}
+// void RayScanner::render()
+// {
+//     std::cout << "\n";
+//     for (auto rowIndex = 0; rowIndex < rows; rowIndex++)
+//     {
+//         std::cout << "                    "; // offset
+//         for (auto columnIndex = 0; columnIndex < columns; columnIndex++)
+//         {
+//             // std::cout << charset[int(image[rowIndex][columnIndex])];
+//             std::cout << charset[int(image[rowIndex][columnIndex])];
+//             // std::cout << image[rowIndex][columnIndex];
+//         }
+//         std::cout << "\n";
+//     }
+// }

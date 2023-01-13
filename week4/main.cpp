@@ -55,19 +55,19 @@ int main()
 {
     auto objects = VPO();
     // Floor f = Floor();
-    Sphere *sphere_0 = new Sphere(-40, 3, 0, 200);
-    Sphere *sphere_1 = new Sphere(-150, 3, 0, 200);
-    Sphere *sphere_2 = new Sphere(-4, 30, 0, 100);
-    Floor *f = new Floor;
+    Sphere *sphere_0 = new Sphere(0.3, 0.3, 0.6, 0.3);
+    Sphere *sphere_1 = new Sphere(-0.15, 0.1, 0.5, 0.4);
+    Sphere *sphere_2 = new Sphere(-0.2, -0.4, -0.3, 0.2);
+    Floor *f = new Floor(-1, -0.1, 0);
 
     objects.push_back(sphere_0);
     objects.push_back(sphere_1);
     objects.push_back(sphere_2);
-    // objects.push_back(f);
+    objects.push_back(f);
 
     RayScanner scanner = RayScanner(objects);
 
     scanner.scan();
-    scanner.render();
+    // scanner.render();
     return 0;
 }
