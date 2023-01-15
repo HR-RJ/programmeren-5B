@@ -5,8 +5,8 @@
 
 auto const rows = 100;
 auto const columns = 200;
-auto const charset = "MNIL+-. ";
-auto const black = sizeof (charset) / sizeof (char) - 1;
+// auto const charset = "MNIL+-. ";
+// auto const black = sizeof (charset) / sizeof (char) - 1;
 auto const stride = 0.105;
 auto const aLot = 1000;
 auto const aspectRatio = 0.65;
@@ -99,7 +99,7 @@ public:
 };
 
 // Black squares on the chessboard pattern act as see through so the rays won't hit them
-// Hit returns false when it hits a black square
+// Hit returns false when it passes through a black square
 class Floor : public Object
 {
     public:

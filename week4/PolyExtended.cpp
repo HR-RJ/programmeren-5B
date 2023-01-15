@@ -1,5 +1,4 @@
 #include "vec3d.hpp"
-auto image = VVF(rows, VF(columns, black));
 
 // print a vector
 void Vec3D::show(std::string &&label) const
@@ -165,28 +164,24 @@ void RayScanner::scan()
         // For loop y
         for (auto colIndex = 0; colIndex < nrOfCols; colIndex++)
         {
-            //auto x = (colIndex - nrOfCols / 2) / (aspectRatio * nrOfCols);
             auto x = (nrOfCols / 2 - colIndex ) / (aspectRatio * nrOfCols);
             // Create Ray
             auto direction = Vec3D(x, y, 0).sub(Vec3D(0, 0, -distFromScreen));
             Ray ray(0, 0, distFromScreen, direction.x, direction.y, direction.z);
             for (auto object : objects)
             {
-                // Hit or not
+                // Checks for hit and puts the value in the array
                 if (object->hit(ray))
                 {
-                    // printf("m");
                     row.push_back(1.0);
                 }
                 else
                 {
-                    // printf("-");
                     row.push_back(0.0);
                 }
             }
         }
         image.push_back(row);
-        // printf("\n");
     }
 
     // print VVF on screen
