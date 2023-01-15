@@ -148,7 +148,7 @@ void RayScanner::scan()
     auto const aspectRatio = 0.4;
 
     // Characters
-    auto const pixelChars = " M";
+    auto const pixelChars = " N";
     auto const distFromScreen = 3.00;
     // Screen Size
     auto const screenWidth = 0.30;
@@ -165,9 +165,7 @@ void RayScanner::scan()
         // For loop y
         for (auto colIndex = 0; colIndex < nrOfCols; colIndex++)
         {
-            // 2
             //auto x = (colIndex - nrOfCols / 2) / (aspectRatio * nrOfCols);
-            // 1
             auto x = (nrOfCols / 2 - colIndex ) / (aspectRatio * nrOfCols);
             // Create Ray
             auto direction = Vec3D(x, y, 0).sub(Vec3D(0, 0, -distFromScreen));
@@ -202,21 +200,3 @@ void RayScanner::scan()
     }
 }
 
-// render
-// If a ray hits a sphere/a tile of the floor it prints a character from the perspective 3 meters behind the screen
-
-// void RayScanner::render()
-// {
-//     std::cout << "\n";
-//     for (auto rowIndex = 0; rowIndex < rows; rowIndex++)
-//     {
-//         std::cout << "                    "; // offset
-//         for (auto columnIndex = 0; columnIndex < columns; columnIndex++)
-//         {
-//             // std::cout << charset[int(image[rowIndex][columnIndex])];
-//             std::cout << charset[int(image[rowIndex][columnIndex])];
-//             // std::cout << image[rowIndex][columnIndex];
-//         }
-//         std::cout << "\n";
-//     }
-// }

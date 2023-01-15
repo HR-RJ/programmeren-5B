@@ -72,17 +72,6 @@ class Ray
 {
 
 public:
-    // Vec3D support;
-    // Vec3D direction;
-    // using VPO = std::vector<Object*>;
-    // VPO objects;
-    // Ray(float xSup, float ySup, float zSup, float xDir, float yDir, float zDir) : support(xSup, ySup, zSup), direction(xDir, yDir, zDir) {}
-    // Ray(float xStart, float yStart, VPO &objects) : objects(objects), support(Vec3D(0, 40, -3)), direction(Vec3D(xStart, yStart, -3)){}
-    // Ray(Vec3D const &support, Vec3D &direction, VPO &objects){
-    //     // direction = direction.unit();
-    // }
-    // bool scan();
-    // // Ray() = default;
     Vec3D support, direction;
     // Overloaded Constructor
     Ray(float xSup, float ySup, float zSup, float xDir, float yDir, float zDir) : support(xSup, ySup, zSup), direction(xDir, yDir, zDir)
