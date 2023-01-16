@@ -3,13 +3,13 @@
 #include <cmath>
 #include <iostream>
 
-auto const rows = 100;
-auto const columns = 200;
+// auto const rows = 100;
+// auto const columns = 200;
 // auto const charset = "MNIL+-. ";
 // auto const black = sizeof (charset) / sizeof (char) - 1;
-auto const stride = 0.105;
-auto const aLot = 1000;
-auto const aspectRatio = 0.65;
+// auto const stride = 0.105;
+// auto const aLot = 1000;
+// auto const aspectRatio = 0.65;
 typedef std::vector<float> VF;
 typedef std::vector<VF> VVF;
 class Object;
